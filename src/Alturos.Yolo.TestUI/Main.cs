@@ -22,6 +22,8 @@ namespace Alturos.Yolo.TestUI
 
             this.buttonProcessImage.Enabled = false;
             this.buttonStartTracking.Enabled = false;
+            this.btnOpenVideo.Enabled = false;
+            this.btnStopVideo.Enabled = false;
 
             this.menuStrip1.Visible = false;
 
@@ -300,6 +302,8 @@ namespace Alturos.Yolo.TestUI
                 this.statusStrip1.Invoke(action);
                 this.buttonProcessImage.Invoke(new MethodInvoker(delegate () { this.buttonProcessImage.Enabled = true; }));
                 this.buttonStartTracking.Invoke(new MethodInvoker(delegate () { this.buttonStartTracking.Enabled = true; }));
+                this.btnOpenVideo.Invoke(new MethodInvoker(delegate () { this.btnOpenVideo.Enabled = true; }));
+                this.btnStopVideo.Invoke(new MethodInvoker(delegate () { this.btnStopVideo.Enabled = true; }));
             }
             catch (Exception exception)
             {
