@@ -394,10 +394,9 @@ namespace Alturos.Yolo.TestUI
         bool isVideoRunning = false;
         private void OpenVideo(ItemColors itemColors, string filePath)
         {
-            //Mat frame = new Mat();
-            //OpenCvSharp.Size dsize = new OpenCvSharp.Size(640, 480);
+            Stopwatch stopwatch = new Stopwatch();
+
             var capture = new VideoCapture(filePath);
-            //Console.WriteLine("With: {0} - Height: {1}", capture.FrameWidth, capture.FrameHeight);
             //VideoWriter videoWriter = new VideoWriter("Output1.mp4", -1, capture.Fps, new OpenCvSharp.Size(capture.FrameWidth, capture.FrameHeight));
 
             int sleepTime = (int)Math.Round(1000 / capture.Fps);
@@ -413,6 +412,8 @@ namespace Alturos.Yolo.TestUI
                 capture.Read(image); // 
                 if (image.Empty())
                     break;
+                stopwatch.Start();
+
 
                 byte[] imageInBytes = image.ToBytes();
                 var items = _yoloWrapper.Detect(imageInBytes);
@@ -433,11 +434,20 @@ namespace Alturos.Yolo.TestUI
                     Cv2.PutText(image, type + "-" + confidence, new OpenCvSharp.Point(x, y), HersheyFonts.HersheySimplex, (width / 180.0) * 0.8, Scalar.Red);
                 }
 
+                stopwatch.Stop();
+
+                var timeExecute = stopwatch.ElapsedMilliseconds;
+                stopwatch.Reset();
+                var fpsRealtime = (int)Math.Round(1000.0 / (double)timeExecute);
+
+                Cv2.PutText(image, $"FPS: {fpsRealtime}", new OpenCvSharp.Point(10, 50), HersheyFonts.HersheyDuplex, 1, Scalar.OrangeRed);
+
+                
                 // Tried this way but nothing is shown
                 pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
 
-                //    window.ShowImage(image);   <==  this has no issue 
-                Cv2.WaitKey(sleepTime);
+                //videoWriter.Write(image);
+                Cv2.WaitKey(fpsRealtime);
             }
         }
     }
